@@ -3,22 +3,46 @@ const { io } = require("./server.config");
 const userController = require("../controllers/user.controller");
 const messageController = require("../controllers/message.controller");
 
+const Message = require("../models/message.model");
+const User = require("../models/user.model");
+
 io.on("connection", (socket) => {
   socket.on("user-connect", (user) => {
-    userController.create({
-      body: user,
+    User.create(new_user, (err, user) => {
+      if (err) {
+        throw err;
+      }
+
+      return {
+        error: false,
+        message: "User added successfully!",
+        data: user,
+      };
     });
   });
 
   socket.on("create-new-message", (message) => {
-    messageController.create({
-      body: message,
+    const newMessage = new Message(message);
+
+    Message.create(newMessage, (err, message) => {
+      if (err) {
+        throw err;
+      }
+
+      return {
+        error: false,
+        message: "Message added successfully!",
+        data: message,
+      };
     });
 
-    const allMessages = messageController.findAll();
+    Message.findAll((err, message) => {
+      if (err) {
+        throw err;
+      }
 
-    console.log(allMessages);
-
-    socket.emit("new-message-created", allMessages);
+      socket.emit("new-message-created", message);
+      return;
+    });
   });
 });

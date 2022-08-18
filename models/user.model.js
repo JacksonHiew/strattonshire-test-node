@@ -10,15 +10,13 @@ var User = function (user) {
 };
 
 User.create = (userInfo, result) => {
-  setTimeout(() => {
-    dbConn.query("INSERT INTO users set ?", userInfo, (err, res) => {
-      if (err) {
-        result(err, null);
-      } else {
-        result(null, res.insertId);
-      }
-    });
-  }, 5000);
+  dbConn.query("INSERT INTO users set ?", userInfo, (err, res) => {
+    if (err) {
+      result(err, null);
+    } else {
+      result(null, res.insertId);
+    }
+  });
 };
 
 User.findById = (id, result) => {
