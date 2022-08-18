@@ -7,10 +7,13 @@ const dbConn = mysql.createConnection({
   user: "root",
   password: "",
   database: "shratton-test",
+  charset: "utf8mb4",
 });
 
 dbConn.connect(function (err) {
-  if (err) throw err;
+  if (err) {
+    throw err;
+  }
   console.log("Database Connected!");
 });
 

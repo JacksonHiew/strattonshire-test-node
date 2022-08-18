@@ -3,7 +3,7 @@ var dbConn = require("../configs/db.config");
 
 //Message object create
 var Message = function (user) {
-  this.senderId = user.senderId;
+  this.username = user.username;
   this.messageContent = user.messageContent;
   this.createdAt = new Date();
   this.updatedAt = new Date();

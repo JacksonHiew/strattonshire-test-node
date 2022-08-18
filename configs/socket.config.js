@@ -1,24 +1,18 @@
 const { io } = require("./server.config");
 
-const userController = require("../controllers/user.controller");
-const messageController = require("../controllers/message.controller");
-
 const Message = require("../models/message.model");
-const User = require("../models/user.model");
+const roomName = "universalRoom";
 
 io.on("connection", (socket) => {
-  socket.on("user-connect", (user) => {
-    User.create(new_user, (err, user) => {
-      if (err) {
-        throw err;
-      }
+  socket.join(roomName);
 
-      return {
-        error: false,
-        message: "User added successfully!",
-        data: user,
-      };
-    });
+  Message.findAll((err, message) => {
+    if (err) {
+      throw err;
+    }
+
+    io.to(roomName).emit("initialized", message);
+    return;
   });
 
   socket.on("create-new-message", (message) => {
@@ -41,7 +35,7 @@ io.on("connection", (socket) => {
         throw err;
       }
 
-      socket.emit("new-message-created", message);
+      io.to(roomName).emit("new-message-created", message);
       return;
     });
   });
